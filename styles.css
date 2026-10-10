@@ -114,6 +114,15 @@ nav a:hover { color: var(--pink); }
     padding: 9px 17px;
 }
 
+.signup-nav-link {
+    padding: 9px 15px;
+    border-radius: 30px;
+    background: var(--green);
+    color: white;
+}
+
+.signup-nav-link:hover { background: var(--green-dark); color: white; }
+
 .hero {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -374,8 +383,10 @@ nav a:hover { color: var(--pink); }
 
 .enquiry-dialog {
     position: relative;
-    width: min(100%, 460px);
-    padding: 34px 30px 28px;
+    width: min(100%, 430px);
+    max-height: calc(100vh - 36px);
+    overflow-y: auto;
+    padding: 38px 30px 30px;
     border: 1px solid #eee2c5;
     border-radius: 24px;
     background: var(--cream);
@@ -399,14 +410,15 @@ nav a:hover { color: var(--pink); }
 }
 
 .enquiry-dialog h2 {
-    margin: 10px 0 8px;
+    margin: 8px 20px 10px;
     color: var(--green-dark);
     font-family: 'Playfair Display', serif;
     font-size: 28px;
+    line-height: 1.2;
 }
 
 .modal-product {
-    margin: 0 0 22px;
+    margin: 0 0 20px;
     color: var(--brown);
     font-size: 14px;
     font-weight: 600;
@@ -414,16 +426,18 @@ nav a:hover { color: var(--pink); }
 
 .contact-actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 9px;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    width: 100%;
 }
 
 .contact-button {
     display: flex;
-    min-height: 48px;
+    min-height: 50px;
     align-items: center;
     justify-content: center;
-    padding: 9px 11px;
+    gap: 9px;
+    padding: 11px 16px;
     border: 1px solid transparent;
     border-radius: 999px;
     color: white;
@@ -452,6 +466,7 @@ nav a:hover { color: var(--pink); }
 .add-cart-button {
     width: 100%;
     min-height: 48px;
+    margin-top: 20px;
     border: 0;
     border-radius: 999px;
     background: var(--gold);
@@ -465,7 +480,6 @@ nav a:hover { color: var(--pink); }
 .add-cart-button:hover { background: #f2ca4f; }
 
 .cart-confirmation {
-    min-height: 16px;
     margin: 10px 0 0;
     color: var(--green-dark);
     font-size: 11px;
@@ -681,8 +695,7 @@ footer p { color: #e7e4d8; }
 }
 
 @media (max-width: 440px) {
-    .contact-actions { grid-template-columns: 1fr; }
-    .enquiry-dialog { padding: 32px 22px 22px; }
+    .enquiry-dialog { padding: 36px 22px 24px; }
     .cart-dialog { padding: 32px 20px 22px; }
     .cart-row { align-items: flex-start; flex-direction: column; }
     .cart-item-controls { width: 100%; justify-content: flex-start; }
@@ -994,4 +1007,45 @@ body.login-page footer {
     body.login-page { padding: 24px 16px; }
     body.login-page .account-form { padding: 29px 22px 24px; }
     body.login-page .account-form h2 { font-size: 29px; }
+}
+
+body.signup-page {
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+body.signup-page .login-logo {
+    width: 104px;
+    height: 104px;
+}
+
+body.signup-page .login-main {
+    width: min(100%, 520px);
+}
+
+body.signup-page .signup-form {
+    width: 100%;
+    padding: 30px 34px 26px;
+}
+
+body.signup-page .signup-form .subtitle {
+    margin-bottom: 22px;
+}
+
+body.signup-page .signup-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+}
+
+body.signup-page .signup-field { min-width: 0; }
+body.signup-page .signup-field-wide { grid-column: 1 / -1; }
+body.signup-page .signup-dob-field { justify-self: center; width: 100%; }
+body.signup-page .signup-field input { margin-bottom: 14px; }
+body.signup-page .signup-form .submit-button { margin-top: 7px; }
+
+@media (max-width: 520px) {
+    body.signup-page .signup-form { padding: 26px 22px 23px; }
+    body.signup-page .signup-fields { grid-template-columns: 1fr; }
+    body.signup-page .signup-field-wide { grid-column: auto; }
 }
