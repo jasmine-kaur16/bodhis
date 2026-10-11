@@ -67,20 +67,5 @@
     </div>
 </footer>
 
-<script>
-const signupForm = document.getElementById("signupForm");
-const signupPassword = document.getElementById("signupPassword");
-const confirmPassword = document.getElementById("confirmPassword");
-
-function validatePasswordMatch() {
-    confirmPassword.setCustomValidity(
-        confirmPassword.value === signupPassword.value ? "" : "Passwords do not match."
-    );
-}
-
-signupPassword.addEventListener("input", validatePasswordMatch);
-confirmPassword.addEventListener("input", validatePasswordMatch);
-signupForm.addEventListener("submit", validatePasswordMatch);
-</script>
 </body>
 </html>

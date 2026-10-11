@@ -31,7 +31,7 @@
         <a href="#about">Our Story</a>
         <a href="login.html" class="account-link">My Account</a>
         <a href="signup.html" class="signup-nav-link">Sign Up</a>
-        <button class="cart-count" id="cartCount" type="button" aria-haspopup="dialog">Cart (0)</button>
+
     </nav>
 </header>
 
@@ -247,44 +247,6 @@
     © 2026 BODHI Creations. All rights reserved.
 </footer>
 
-<div class="modal-backdrop" id="enquiryModal" hidden>
-    <section class="enquiry-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <button class="modal-close" id="closeModal" type="button" aria-label="Close popup">&times;</button>
-        <span class="eyebrow">A LITTLE LIGHT, JUST FOR YOU</span>
-        <h2 id="modalTitle">Enquire about this candle</h2>
-        <p class="modal-product" id="modalProduct"></p>
-        <div class="contact-actions">
-            <a class="contact-button email-button" id="emailAction" href="mailto:bodhicreations333@gmail.com">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg>
-                <span>Email us</span>
-            </a>
-            <a class="contact-button phone-button" id="phoneAction" href="tel:+918484073455">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h3l2 5-2 2a15 15 0 0 0 4 4l2-2 5 2v3c0 1.1-.9 2-2 2C10 19 5 14 5 5c0-1.1.9-2 2-2Z"></path></svg>
-                <span>Call +91 84840 73455</span>
-            </a>
-            <a class="contact-button whatsapp-button" id="whatsappAction" href="https://wa.me/918484073455" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.4L4 20l.9-3.7a8.5 8.5 0 1 1 15.6-4.6Z"></path><path d="M9 8.5c.3-.5.6-.5.9-.5l.6.1.9 2.1-.8.9a7 7 0 0 0 2.9 2.9l.9-.8 2.1.9.1.6c0 .3 0 .6-.5.9-.6.4-1.4.5-2.3.2-2.1-.7-4.4-3-5.1-5.1-.3-.9-.2-1.7.3-2.2Z"></path></svg>
-                <span>Talk on WhatsApp</span>
-            </a>
-        </div>
-        <button class="add-cart-button" id="addToCart" type="button">Add to Cart</button>
-        <p class="cart-confirmation" id="cartConfirmation" aria-live="polite"></p>
-    </section>
-</div>
-
-<div class="modal-backdrop cart-backdrop" id="cartModal" hidden>
-    <section class="cart-dialog" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
-        <button class="modal-close" id="closeCart" type="button" aria-label="Close cart">&times;</button>
-        <span class="eyebrow">YOUR BODHI PICKS</span>
-        <h2 id="cartTitle">Your Cart</h2>
-        <p class="cart-empty" id="cartEmpty">Your cart is waiting for a little light.</p>
-        <div class="cart-items" id="cartItems"></div>
-        <div class="cart-total"><span>Subtotal</span><strong id="cartSubtotal">₹0</strong></div>
-        <p class="cart-note">Shipping and final order details can be confirmed with us.</p>
-        <button class="checkout-button" id="whatsappCheckout" type="button" disabled>Order on WhatsApp</button>
-    </section>
-</div>
-
 <script>
 const cards = Array.from(document.querySelectorAll(".product-card"));
 const search = document.getElementById("search");
@@ -293,110 +255,6 @@ const maxPrice = document.getElementById("maxPrice");
 const fragrance = document.getElementById("fragrance");
 const resultCount = document.getElementById("resultCount");
 const productGrid = document.getElementById("productGrid");
-const enquiryModal = document.getElementById("enquiryModal");
-const cartModal = document.getElementById("cartModal");
-const modalProduct = document.getElementById("modalProduct");
-const cartCount = document.getElementById("cartCount");
-const cartItemsContainer = document.getElementById("cartItems");
-const cartEmpty = document.getElementById("cartEmpty");
-const cartSubtotal = document.getElementById("cartSubtotal");
-const whatsappCheckout = document.getElementById("whatsappCheckout");
-const cartConfirmation = document.getElementById("cartConfirmation");
-const addToCartButton = document.getElementById("addToCart");
-const whatsappNumber = "918484073455";
-function loadCart() {
-    try {
-        const savedCart = JSON.parse(localStorage.getItem("bodhiCart") || "[]");
-        return Array.isArray(savedCart) ? savedCart.filter(item =>
-            item && typeof item.name === "string" && Number.isFinite(item.price) &&
-            Number.isInteger(item.quantity) && item.quantity > 0
-        ) : [];
-    } catch {
-        return [];
-    }
-}
-
-let cartItems = loadCart();
-let selectedProduct = null;
-
-function saveCart() {
-    try {
-        localStorage.setItem("bodhiCart", JSON.stringify(cartItems));
-    } catch {
-        return;
-    }
-}
-
-function formatPrice(amount) {
-    return "₹" + amount.toLocaleString("en-IN");
-}
-
-function renderCart() {
-    cartItemsContainer.replaceChildren();
-    let itemCount = 0;
-    let subtotal = 0;
-
-    cartItems.forEach((item, index) => {
-        itemCount += item.quantity;
-        subtotal += item.price * item.quantity;
-
-        const row = document.createElement("article");
-        row.className = "cart-row";
-        const details = document.createElement("div");
-        details.className = "cart-item-details";
-        const name = document.createElement("strong");
-        name.textContent = item.name;
-        const price = document.createElement("span");
-        price.textContent = formatPrice(item.price) + " each";
-        details.append(name, price);
-
-        const controls = document.createElement("div");
-        controls.className = "cart-item-controls";
-        const minus = document.createElement("button");
-        minus.type = "button";
-        minus.dataset.cartAction = "decrease";
-        minus.dataset.cartIndex = index;
-        minus.setAttribute("aria-label", "Remove one " + item.name);
-        minus.textContent = "−";
-        const quantity = document.createElement("span");
-        quantity.textContent = item.quantity;
-        const plus = document.createElement("button");
-        plus.type = "button";
-        plus.dataset.cartAction = "increase";
-        plus.dataset.cartIndex = index;
-        plus.setAttribute("aria-label", "Add one " + item.name);
-        plus.textContent = "+";
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "remove-cart-item";
-        remove.dataset.cartAction = "remove";
-        remove.dataset.cartIndex = index;
-        remove.textContent = "Remove";
-        controls.append(minus, quantity, plus, remove);
-        row.append(details, controls);
-        cartItemsContainer.append(row);
-    });
-
-    cartCount.textContent = "Cart (" + itemCount + ")";
-    cartSubtotal.textContent = formatPrice(subtotal);
-    cartEmpty.hidden = cartItems.length > 0;
-    whatsappCheckout.disabled = cartItems.length === 0;
-    saveCart();
-}
-
-renderCart();
-
-function closeEnquiryModal() {
-    enquiryModal.hidden = true;
-    if (cartModal.hidden) document.body.classList.remove("modal-open");
-    selectedProduct?.focus();
-}
-
-function closeCartModal() {
-    cartModal.hidden = true;
-    if (enquiryModal.hidden) document.body.classList.remove("modal-open");
-    cartCount.focus();
-}
 
 const emptyState = document.createElement("p");
 emptyState.className = "empty-state";
@@ -409,28 +267,22 @@ function filterProducts() {
     const min = minPrice.value === "" ? 0 : Number(minPrice.value);
     const max = maxPrice.value === "" ? Infinity : Number(maxPrice.value);
     const scent = fragrance.value;
-
     let visible = 0;
 
     cards.forEach(card => {
         const name = card.querySelector("h3").textContent.toLowerCase();
         const description = card.querySelector(".product-info p").textContent.toLowerCase();
         const price = Number(card.dataset.price);
-        const cardScent = card.dataset.fragrance;
-
         const matchesSearch = name.includes(query) || description.includes(query);
         const matchesPrice = price >= min && price <= max;
-        const matchesScent = !scent || cardScent === scent;
-
+        const matchesScent = !scent || card.dataset.fragrance === scent;
         const show = matchesSearch && matchesPrice && matchesScent;
 
         card.hidden = !show;
         if (show) visible++;
     });
 
-    resultCount.textContent =
-        visible + (visible === 1 ? " candle found" : " candles found");
-
+    resultCount.textContent = visible + (visible === 1 ? " candle found" : " candles found");
     emptyState.hidden = visible !== 0;
 }
 
@@ -449,77 +301,9 @@ document.getElementById("resetFilters").addEventListener("click", () => {
 
 document.querySelectorAll(".enquire-button").forEach(button => {
     button.addEventListener("click", () => {
-        selectedProduct = button;
-        const card = button.closest(".product-card");
-        const price = Number(card.dataset.price).toLocaleString("en-IN");
-        modalProduct.textContent = button.dataset.product + " · ₹" + price;
-        cartConfirmation.textContent = "";
-        addToCartButton.textContent = "Add to Cart";
-        enquiryModal.hidden = false;
-        document.body.classList.add("modal-open");
-        document.getElementById("closeModal").focus();
+        const subject = encodeURIComponent("Candle enquiry: " + button.dataset.product);
+        window.location.href = "mailto:bodhicreations333@gmail.com?subject=" + subject;
     });
-});
-
-document.getElementById("closeModal").addEventListener("click", closeEnquiryModal);
-cartCount.addEventListener("click", () => {
-    renderCart();
-    cartModal.hidden = false;
-    document.body.classList.add("modal-open");
-    document.getElementById("closeCart").focus();
-});
-document.getElementById("closeCart").addEventListener("click", closeCartModal);
-enquiryModal.addEventListener("click", event => {
-    if (event.target === enquiryModal) closeEnquiryModal();
-});
-cartModal.addEventListener("click", event => {
-    if (event.target === cartModal) closeCartModal();
-});
-cartItemsContainer.addEventListener("click", event => {
-    const actionButton = event.target.closest("button[data-cart-action]");
-    if (!actionButton) return;
-    const itemIndex = Number(actionButton.dataset.cartIndex);
-    const action = actionButton.dataset.cartAction;
-    if (action === "increase") cartItems[itemIndex].quantity++;
-    if (action === "decrease") cartItems[itemIndex].quantity--;
-    if (action === "remove" || cartItems[itemIndex]?.quantity === 0) {
-        cartItems.splice(itemIndex, 1);
-    }
-    renderCart();
-});
-whatsappCheckout.addEventListener("click", () => {
-    if (cartItems.length === 0) return;
-    const orderLines = cartItems.map(item =>
-        item.name + " × " + item.quantity + " — " + formatPrice(item.price * item.quantity)
-    );
-    const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-    const message = "Hello BODHI Creations! I would like to order:\n" +
-        orderLines.join("\n") + "\nSubtotal: " + formatPrice(subtotal);
-    window.open("https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(message), "_blank", "noopener");
-});
-document.addEventListener("keydown", event => {
-    if (event.key !== "Escape") return;
-    if (!enquiryModal.hidden) closeEnquiryModal();
-    if (!cartModal.hidden) closeCartModal();
-});
-addToCartButton.addEventListener("click", () => {
-    if (!selectedProduct) return;
-    const card = selectedProduct.closest(".product-card");
-    const existingItem = cartItems.find(item => item.name === selectedProduct.dataset.product);
-    if (existingItem) {
-        existingItem.quantity++;
-    } else {
-        cartItems.push({
-            name: selectedProduct.dataset.product,
-            price: Number(card.dataset.price),
-            quantity: 1
-        });
-    }
-    renderCart();
-    addToCartButton.textContent = "Added to Cart ✓";
-    const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-    cartConfirmation.textContent = "Added! Your cart has " + itemCount +
-        (itemCount === 1 ? " item." : " items.");
 });
 
 filterProducts();
